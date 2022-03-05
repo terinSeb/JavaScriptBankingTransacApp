@@ -128,6 +128,6 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // const currenSet = new Set([
 //   'USD','EUR','GBP','EUR','GBP'
 // ])
-// currenSet.forEach(function(curr,i,map){
-//   console.log(`${curr} .... ${i}`)
-// })
+currenSet.forEach(function(curr,i,map){
+  console.log(`${curr} .... ${i}`)
+})
