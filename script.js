@@ -116,18 +116,18 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //   }
 // })
 
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
-currencies.forEach(function(curr,i,map){
-  console.log(`${curr} .... ${i}`)
-})
+// const currencies = new Map([
+//   ['USD', 'United States dollar'],
+//   ['EUR', 'Euro'],
+//   ['GBP', 'Pound sterling'],
+// ]);
+// currencies.forEach(function(curr,i,map){
+//   console.log(`${curr} .... ${i}`)
+// })
 
-const currenSet = new Set([
-  'USD','EUR','GBP','EUR','GBP'
-])
-currenSet.forEach(function(curr,i,map){
-  console.log(`${curr} .... ${i}`)
-})
+// const currenSet = new Set([
+//   'USD','EUR','GBP','EUR','GBP'
+// ])
+// currenSet.forEach(function(curr,i,map){
+//   console.log(`${curr} .... ${i}`)
+// })
