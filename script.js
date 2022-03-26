@@ -145,3 +145,41 @@ containerMovements.insertAdjacentHTML('afterbegin',html)
     })
 }
 displayMovements(account1.movements);
+
+//Julia's Data [3,5,2,12,7]
+//Kate's Data [4,1,15,8,3]
+const checkDogs = function(juliaArr,KateArr){
+  const juliaArrCorrected = juliaArr.slice();
+  juliaArrCorrected.splice(0,1);
+  juliaArrCorrected.splice(-2)
+
+  const dogs = juliaArrCorrected.concat(KateArr);
+console.log(dogs);
+  dogs.forEach(function(dog,i){
+    if(dog > 3){
+      console.log(`Dog no ${i + 1} is an Adult and his age is ${dog}.`)
+    }
+    else{
+      console.log(`Dog no ${i + 1} is still a puppy.`)
+    }
+  })
+}
+checkDogs([3,5,2,12,7],[4,1,15,8,3]);
+
+const euroToUsd = 1.1
+const movementUSD = movements.map(function(mov){
+  return mov * euroToUsd;
+})
+console.log(movements);
+console.log(movementUSD);
+
+const movementUSDfor = []
+for(const mov of movements) movementUSDfor.push(mov * euroToUsd);
+console.log(movementUSDfor);
+
+const movementDescription = movements.map((mov, i) => 
+
+    `Movement ${i + 1}: You ${mov > 0 ? 'Deposited': 'Withdrew'} ${Math.abs(mov)}`  
+
+)
+console.log(movementDescription);
