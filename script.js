@@ -141,7 +141,7 @@ const displayMovements = function(movements){
 const html = `
 <div class="movements__row">
 <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-<div class="movements__value">${mov}</div>
+<div class="movements__value">${mov}€</div>
 </div>
 `
 containerMovements.insertAdjacentHTML('afterbegin',html)
@@ -197,31 +197,55 @@ const createUsername = function(acc){
 createUsername(accounts);
 // console.log(accounts)
 
-const deposits = movements.filter(function(mov){
-return mov > 0
-});
-console.log(deposits);
-const depositsArr = [];
-for(const mov of movements) if(mov > 0) depositsArr.push(mov);
-console.log(depositsArr);
+// Coding Challenge #1
+// const deposits = movements.filter(function(mov){
+// return mov > 0
+// });
+// console.log(deposits);
+// const depositsArr = [];
+// for(const mov of movements) if(mov > 0) depositsArr.push(mov);
+// console.log(depositsArr);
 
-const withdrawals = movements.filter(mov => mov < 0);
-console.log(withdrawals);
+// const withdrawals = movements.filter(mov => mov < 0);
+// console.log(withdrawals);
 
-const maxAmount = movements.reduce((acc,curr) => {
-  if(acc > curr) return acc
-  else
-  return curr;
-},movements[0]);
-console.log(maxAmount);
+// const maxAmount = movements.reduce((acc,curr) => {
+//   if(acc > curr) return acc
+//   else
+//   return curr;
+// },movements[0]);
+// console.log(maxAmount);
 
-const data1 = [5,2,4,1,15,8,3]
-const humanAge = data1.map(dogAge =>   (dogAge <=2) ? (2 * dogAge) : (16 + ( dogAge * 4)));
-console.log(humanAge);
-const adultDogs = humanAge.filter(dogAge =>  (dogAge >= 18 )  )
-  console.log(adultDogs);
+// const data1 = [5,2,4,1,15,8,3]
+// const humanAge = data1.map(dogAge =>   (dogAge <=2) ? (2 * dogAge) : (16 + ( dogAge * 4)));
+// console.log(humanAge);
+// const adultDogs = humanAge.filter(dogAge =>  (dogAge >= 18 )  )
+//   console.log(adultDogs);
+//   const averageAge = adultDogs.reduce((acc,curr) => {
+//     return acc + curr;
+//   },0);
+//  console.log(averageAge/adultDogs.length);
 
-  const averageAge = adultDogs.reduce((acc,curr) => {
-    return acc + curr;
-  },0);
- console.log(averageAge/adultDogs.length);
+const calcDisplaySummary = function(movements){
+const income = movements.filter(mov => mov > 0)
+.reduce((acc,cur) => acc + cur,0);
+labelSumIn.textContent = `${income}€`
+
+const outIncome = movements.filter(mov => mov < 0)
+.reduce((acc,cur) => acc + cur,0);
+labelSumOut.textContent = `${Math.abs(outIncome)}€`
+
+const totInterest = movements.filter(move => move > 0)
+.map(mov => (mov * 1.2)/100)
+.filter(mov => mov > 1)
+.reduce((acc,curr) => acc + curr,0 )
+labelSumInterest.textContent = `${totInterest}€`
+
+}
+calcDisplaySummary(account1.movements);
+
+//Example for Find Method:
+const withdwawal = movements.find(mov => mov > 0);
+console.log(withdwawal);
+const acct = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(acct);
