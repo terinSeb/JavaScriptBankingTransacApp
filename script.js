@@ -137,9 +137,10 @@ labelBalance.textContent = `${balanceM} Euro`;
 acc.balance =  Number(balanceM);
 }
 
-const displayMovements = function(movements){
+const displayMovements = function(movements, sort=false){
+  const movs = sort ? movements.slice().sort((a,b) => a-b) : movements;
   containerMovements.innerHTML = ''
-  movements.forEach(function(mov,i){
+  movs.forEach(function(mov,i){
     const type = mov > 0 ? 'deposit' : 'withdrawal'
 const html = `
 <div class="movements__row">
@@ -150,6 +151,12 @@ const html = `
 containerMovements.insertAdjacentHTML('afterbegin',html)
     })
 }
+let isSorted = false;
+btnSort.addEventListener('click', function(e){
+  e.preventDefault();
+  displayMovements(currentAccount.movements,!isSorted)
+  isSorted = !isSorted;
+})
 // displayMovements(account1.movements);
 
 //Julia's Data [3,5,2,12,7]
@@ -296,3 +303,43 @@ btnTransfer.addEventListener('click',function(e){
   }
   inputTransferAmount.value = inputTransferTo.value = '';
 })
+
+btnClose.addEventListener('click', function(e){
+e.preventDefault();
+
+if(inputCloseUsername.value === currentAccount.username &&
+  Number(inputClosePin.value) === currentAccount.pin)
+  {
+    const index =  accounts.findIndex( acc => 
+      acc.username === inputCloseUsername.value)
+
+      accounts.splice(index,1);
+      containerApp.style.opacity = 0;
+  }
+
+  inputClosePin.value = inputCloseUsername.value = '';
+})
+
+// console.log(movements.some(amt => amt > 2000))
+// console.log(movements.every(amt => amt > 2000))
+
+// const deposit = mov => mov > 2000;
+// console.log(movements.some(deposit))
+// console.log(movements.every(deposit))
+// console.log(movements.filter(deposit))
+
+// const arr = [[1,2,3],[4,5,6],7,8]
+// const arrDeep = [[1,[2,3]],[4,5,6],7,8]
+// console.log(arr.flat());
+// console.log(arrDeep.flat(2));
+
+
+const overAllBalance = accounts.map(acc => acc.movements)
+.flat()
+.reduce((acc,mov) => acc+ mov,0);
+
+const overAllBalance2 = accounts.flatMap(acc => acc.movements)
+.reduce((acc,mov) => acc+ mov,0);
+
+console.log(overAllBalance2)
+console.log(accounts)
