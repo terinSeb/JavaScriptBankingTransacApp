@@ -133,8 +133,8 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // })
 const calcDisplayBalance = acc => {
 const balanceM = acc.movements.reduce(( acc,cur,i,arr) =>  acc + cur ,0);
-labelBalance.textContent = `${balanceM} Euro`;
-acc.balance =  Number(balanceM);
+labelBalance.textContent = `${balanceM.toFixed(2)} Euro`;
+acc.balance =  (+balanceM).toFixed(2);
 }
 
 const displayMovements = function(movements, sort=false){
@@ -145,7 +145,7 @@ const displayMovements = function(movements, sort=false){
 const html = `
 <div class="movements__row">
 <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-<div class="movements__value">${mov}€</div>
+<div class="movements__value">${mov.toFixed(2)}€</div>
 </div>
 `
 containerMovements.insertAdjacentHTML('afterbegin',html)
@@ -239,17 +239,17 @@ createUsername(accounts);
 const calcDisplaySummary = function(currAcc){
 const income = currAcc.movements.filter(mov => mov > 0)
 .reduce((acc,cur) => acc + cur,0);
-labelSumIn.textContent = `${income}€`
+labelSumIn.textContent = `${income.toFixed(2)}€`
 
 const outIncome = currAcc.movements.filter(mov => mov < 0)
 .reduce((acc,cur) => acc + cur,0);
-labelSumOut.textContent = `${Math.abs(outIncome)}€`
+labelSumOut.textContent = `${outIncome.toFixed(2)}€`
 
 const totInterest = currAcc.movements.filter(move => move > 0)
 .map(mov => (mov * currAcc.interestRate)/100)
 .filter(mov => mov > 1)
 .reduce((acc,curr) => acc + curr,0 )
-labelSumInterest.textContent = `${totInterest}€`
+labelSumInterest.textContent = `${totInterest.toFixed(2)}€`
 
 }
 // calcDisplaySummary(account1.movements);
@@ -341,5 +341,71 @@ const overAllBalance = accounts.map(acc => acc.movements)
 const overAllBalance2 = accounts.flatMap(acc => acc.movements)
 .reduce((acc,mov) => acc+ mov,0);
 
-console.log(overAllBalance2)
-console.log(accounts)
+// console.log(overAllBalance2)
+// console.log(accounts)
+
+const x = new Array(7);
+
+console.log(x.fill(1,3,5));
+
+console.log(Array.from({length: 7}, () => 2));
+
+console.log(Array.from({length: 7}, (_,i) => i + 1));
+
+labelBalance.addEventListener('click',function(){
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('€',''))
+  )
+  console.log(movementsUI);
+})
+
+const {deposit,withdrawls} = accounts.flatMap(acc => acc.movements)
+.reduce((acc,curr) =>
+{acc[curr > 0 ? 'deposit' : 'withdrawls'] += curr
+return acc}
+ ,
+{deposit:0,withdrawls:0} );
+
+console.log(deposit,withdrawls);
+
+// console.log(numDeposit100);
+
+const convertTitleCase = function(title){
+  const nonConverts = ['a','an','and','the','but','or','on','in','with'];
+  const capsTitle =
+  title.toLowerCase()
+  .split(' ')
+  .map(word => nonConverts.includes(word) ? word :
+  word[0].toUpperCase() + word.slice(1))
+  .join(' ');
+
+  return capsTitle;
+}
+
+console.log(convertTitleCase('this is a nice title'));
+
+const dogs = [
+{weight:22,curFood:250,owners:['Alice','Bob']},
+{weight:8,curFood:200,owners:['Matilda']},
+{weight:13,curFood:275,owners:['Sarah','John']},
+{weight:32,curFood:340,owners:['Michael']}
+];
+
+dogs.forEach(function(dogsData){
+  dogsData.recmFood = Math.trunc((dogsData.weight ** 0.75) * 28);
+})
+
+let sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(sarahDog);
+
+let result = sarahDog.curFood > (sarahDog.recmFood + (sarahDog.recmFood ** 0.1))
+  ? 'Dog is eating too Much' :
+  sarahDog.curFood < (sarahDog.recmFood + (sarahDog.recmFood ** 0.1))
+  ? 'Dog is eating very less' : 'Dog is eating Fine.'
+  // console.log(result);
+
+  let arrayToomuch = dogs.filter(dog => dog.curFood > dog.recmFood )
+  .flatMap(dog => dog.owners);
+
+  console.log(arrayToomuch);
