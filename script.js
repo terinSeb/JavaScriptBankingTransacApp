@@ -21,9 +21,9 @@ const account1 = {
     '2020-01-28T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2022-06-16T17:01:17.194Z',
+    '2022-06-17T23:36:17.929Z',
+    '2022-06-18T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -80,21 +80,37 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+const formatMovementsDate = function(date){
+ const calDaysPasses =(day1,day2) => Math.round(Math.abs(day2 - day1) / (1000 * 60 * 60 * 24));
+ const dayPassed = calDaysPasses(new Date(),date);
+ if(dayPassed === 0) return 'Today';
+ if(dayPassed === 1) return 'Yesterday';
+ if(dayPassed <=  7) return `${dayPassed} days ago`;
 
-const displayMovements = function (movements, sort = false) {
+ const day = `${date.getDate()}`.padStart(2,0);
+const mon = `${date.getMonth() + 1}`.padStart(2,0);
+const year = date.getFullYear();
+  return `${day}/${mon}/${year}`;
+}
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+  const dateMov = new Date(acc.movementsDates[i]);
+   
+  const displayDate  = formatMovementsDate(dateMov);
 
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+    <div class="movements__date">${displayDate}</div>
+   
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -111,12 +127,12 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +142,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -142,7 +158,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -154,6 +170,16 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+const now = new Date();
+const day = `${now.getDate()}`.padStart(2,0);
+const mon = `${now.getMonth() + 1}`.padStart(2,0);
+const year = now.getFullYear();
+const hour = `${now.getHours()}`.padStart(2,0);
+const min = `${now.getMinutes()}`.padStart(2,0);
+labelDate.textContent = `${day}/${mon}/${year} ${hour}:${min}`
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -198,6 +224,8 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    currentAccount.movementsDates.push((new Date()).toISOString());
+    receiverAcc.movementsDates.push((new Date()).toISOString());
     // Update UI
     updateUI(currentAccount);
   }
@@ -211,7 +239,7 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
     currentAccount.movements.push(amount);
-
+currentAccount.movementsDates.push((new Date()).toISOString());
     // Update UI
     updateUI(currentAccount);
   }
@@ -251,3 +279,11 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+// console.log(new Date())
+// console.log(new Date('2019-11-18T21:31:17.178Z'))
+// console.log(new Date('December 24,2013'))
+
+// console.log(new Date(2013,10,23,4,23,5))
+let future  = new Date(2037,10,23,4,23,5)
+console.log( new Date(future.setFullYear(2050)))
+// console.log((new  Date(Date.now())).setFullYear(2025))
